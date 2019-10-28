@@ -1,7 +1,7 @@
 FROM postgres:9.6
 LABEL Description="Esta imagen sirve para la configuración de la capa de base de datos" Version="1.0"
 
-ARG locale=es_CR
+ARG locale=pt_BR
 ARG MY_TZ=America/Sao_Paulo
 
 ENV LANG ${locale}.utf8
