@@ -4,7 +4,7 @@ LABEL Description="Esta imagen sirve para la configuración de apache para moodl
 ARG PHP_SOCKET=php-fpm:9000
 ARG DOCUMENT_ROOT=/var/www/html
 ARG ALIAS_DOMAIN=*.vm
-ARG MY_TZ=America/Costa_Rica
+ARG MY_TZ=America/Sao_Paulo
 
 ENV WEB_PHP_SOCKET=$PHP_SOCKET
 ENV WEB_DOCUMENT_ROOT=$DOCUMENT_ROOT
