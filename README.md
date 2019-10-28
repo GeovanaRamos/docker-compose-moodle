@@ -5,8 +5,6 @@
 ![Postgres](https://img.shields.io/badge/Postgres-9.6-blue.svg?colorB=0085B0)
 [![Software License](https://img.shields.io/badge/License-APACHE-black.svg?style=flat-square&colorB=585ac2)](LICENSE)
 
->Leer en [**Español**](#español)
-
 docker-compose-moodle quickly builds a local workspace for Moodle  (Apache2, PHP-FPM with XDEBUG y Postgres) using containers for each of its main components. The local workspace is build and manage by Docker Compose
 
 ## Quickstart:
@@ -36,15 +34,15 @@ The following table describes environment variables in [**.env**](.env):
 | :--- |:--- |:--- |
 | **REPO_FOLDER** | html | Default relative path for Moodle repo |
 | **DOCUMENT_ROOT** | /var/www/html | Mount point inside containers for volume **REPO_FOLDER** |
-| **MY_TZ** | America/Costa_Rica | Containers timezone |
-| **PG_LOCALE** | es_CR | Containers locale |
+| **MY_TZ** | America/Sao_Paulo | Containers timezone |
+| **PG_LOCALE** | pt_BR | Containers locale |
 | **PG_PORT** | 5432 | Postregres port to expose  |
 | **POSTGRES_DB** | moodle | Postgres DB for Moodle |
-| **POSTGRES_USER** | user | DB user for Moodle |
-| **POSTGRES_PASSWORD** | password | DB password for Moodle |
+| **POSTGRES_USER** | admin | DB user for Moodle |
+| **POSTGRES_PASSWORD** | admin | DB password for Moodle |
 | **PHP_SOCKET** | 9000 | PHP-FPM socket to connect apache2  and php-fpm services |
 | **ALIAS_DOMAIN** | localhost | domain alias |
-| **WWW_PORT** | 80 | Web port to be bound |
+| **WWW_PORT** | 8080 | Web port to be bound |
 | **MOODLE_DATA** | /var/moodledata | Mount point inside containers for Moodle data folder  |
 | **WWWROOT** | localhost | Host part to set in Moodle file 'config.php' for config option 'wwwroot' |
 
@@ -125,8 +123,8 @@ Config pgadmin4
         * Name: Any name you want
     * Tab ```Connection```
         * Host name/address: ```postgres```
-        * Host Username: ```user```
-        * Host Password: ```password```
+        * Host Username: ```admin```
+        * Host Password: ```admin```
     * Save
 
 ## Install Docker
@@ -183,179 +181,3 @@ sudo mv /tmp/docker-compose /usr/local/bin/docker-compose
 
   [c1ae1065]: https://docs.docker.com/compose/install/ "Docker-compose"
 
-# Español
-docker-compose-moodle es un repositorio para crear rápidamente un entorno de trabajo con Moodle (Apache2, PHP-FPM con XDEBUG y Postgres) usando contenedores para cada uno sus principales componentes. El entorno de trabajo se crea y gestiona con Docker Compose.
-
-## Pasos rápidos para crear proyecto:
-1. Tener Docker. Ver como instalar [_Docker en Ubuntu_](#instalar-docker)
-2. Tener Docker Compose. Ver como instalar [_Docker Compose como contenedor_](#instalar-docker-compose)
-3. Descargar este repo y acceder a él: ```git clone https://github.com/jobcespedes/docker-compose-moodle.git && cd docker-compose-moodle```
-4. Copiar repositorio de código de Moodle: ```git clone -b MOODLE_35_STABLE https://github.com/moodle/moodle.git html```
-5. Desplegar con: ```docker-compose up -d```
-
-## Estructura de Docker Compose
-A continuación se incluye una tabla que resume la estructura del archivo de Docker Compose:
-
-| Componente | Tipo | Responsabilidad | Contenido | Configuración |
-| :--- |:--- | :--- | :---| :---|
-| **apache2** | Contenedor | Servicio web | Debian8, Apache2 | El mínimo de módulos de apache y el [servidor web](http://dockerfile.readthedocs.io/en/latest/content/DockerImages/dockerfiles/php-apache.html#web-environment-variables) |
-| **cron** | Contenedor|Tarea de cron de Moodle | Debian8, Cron | Frecuencia de ejecución de tarea cron de Moodle |
-| **db_dumps** | Volumen | Restaurar una base de datos inicial | Archivos de respaldo de base de datos. | Para restaurar al iniciar, nombre el archivo sql de respaldo como dump-init.sql.gz |
-| **moodledata** | Volumen | [Almacen de datos de moodle](https://docs.moodle.org/all/es/Directorio_Moodledata) | Archivos generados por Moodle |  |
-| **php-fpm** | Contenedor | Interprete y manejador de procesos para PHP | Debian8, PHP-FPM, XDEBUG | Modulos de php  y paquetes adicionales para Moodle  |
-| **postgres** | Contenedor | Gestor de base de datos  | Debian8, Postgres | [Usuario y base de datos](https://hub.docker.com/_/postgres/) |
-| ***REPO_FOLDER*** | Volumen | Código de aplicación  | Código de Moodle  | Por defecto es './html' (ver archivo .env) |
-
-## Variables de ambiente
-La siguiente tabla contiene las variables utilizadas en el archivo [**.env**](.env) para docker compose:
-
-| Variable | Valor por defecto | Utilidad |
-| :--- |:--- |:--- |
-| **REPO_FOLDER** | html | Ruta relativa para el código de Moodle |
-| **DOCUMENT_ROOT** | /var/www/html | Punto de montaje para **REPO_FOLDER** dentro de contenedores |
-| **MY_TZ** | America/Costa_Rica | Zona horaria para los contenedores |
-| **PG_LOCALE** | es_CR | Configuración de lugar |
-| **PG_PORT** | 5432 | Puerto de base de datos postgres a publicar  |
-| **POSTGRES_DB** | moodle | Nombre de la base de datos postgres de Moodle |
-| **POSTGRES_USER** | user | Nombre de usuario de la base de datos postgres de Moodle |
-| **POSTGRES_PASSWORD** | password | Contraseña de la base de datos postgres de Moodle |
-| **PHP_SOCKET** | 9000 | Socket para conectar apache2 con php-fpm |
-| **ALIAS_DOMAIN** | localhost | alias de dominio |
-| **WWW_PORT** | 80 | Puerto web a publicar |
-| **MOODLE_DATA** | /var/moodledata | Carpeta de datos de Moodle a montar en los contenedores |
-| **WWWROOT** | localhost | Para de nombre de host en la url de config.php de Moodle |
-
-
-## Gestión del entorno con Docker Compose
-> **Dentro de la carpeta del proyecto**
-
-1. Detener el proyecto
-``` bash
-docker-compose stop
-# docker-compose stop <servicio>
-```
-2. Iniciar el proyecto
-``` bash
-docker-compose start
-# docker-compose start <servicio>
-```
-
-2. Correr proyecto
-``` bash
-docker-compose up -d
-# Nombrar el proyecto diferente a la carpeta:
-# docker-compose -p mi-proy up -d
-```
-3. Eliminar proyecto
-``` bash
-docker-compose down
-# Eliminar los volumenes también:
-# docker-compose --volumes
-# Eliminar con un nombre de proyecto especifico:
-# docker-compose -p mi-proy down
-```
-4. Logs
-``` bash
-docker-compose logs
-#docker-compose logs <servicio>
-```
-
-5. Algunos comandos útiles de Docker
-``` bash
-# Ver contenedores
-docker ps
-# Ver imágenes
-docker images
-# Ingresar a un contenedores
- docker exec -it <nombre_contenedor> bash
-# Ver logs de un contenedor
-docker logs <nombre_contenedor> -f
-# Eliminar imágenes huérfanas
-docker rmi $(docker images -f "dangling=true" -q)
-```
-
-## Notas
-> Restaurar una base de datos al inicio
-
-Se puede restaurar una base de datos, agregando el script sql generador (comprimido como gzip) a la caperta db_dumps y nombrando el archivo como dump-init.sql.gz
-> **IMPORTANTE**: Dependiendo del tamaño, la ejecución de este sql podría demorar la disponibilidad inicial de la base de datos.
-
-### XDEBUG
-> Se utiliza el idekey `PHPTEST`
-
-#### PHPStorm
-Configuración para depurar con IDE PHPStorm:
-
-1. Agregar servidor:
-    * Settings -> Languages -> PHP -> Servers
-2. Agregar PHP remote debug
-    * Run / Debug Configurations -> PHP remote debug
-    * Utilizar servidor previamente agregado y establecer como idekey el valor `PHPTEST`
-3. Activar botón `Start listening for PHP Debug Connections`
-
-### Pgadmin4
-Pasos para usar pgadmin4
-1. Ingresar a http://localhost:5050
-2. En ```File -> Preferences -> Binary paths``` establecer en ```usr/bin```
-3. Agregar nuevo servidor:
-    * Pestaña ```General```
-        * Name: Un nombre para el servidor
-    * Pestaña ```Connection```
-        * Host name/address: ```postgres```
-        * Host Username: ```metics```
-        * Host Password: ```devpass```
-    * Guardar
-
-## Instalar Docker
->Ubuntu 16
-
-A partir de instrucciones en [la documentación de Docker](https://docs.docker.com/engine/installation/linux/ubuntu/)
-``` bash
-sudo apt-get update
-
-# Paquetes extra
-sudo apt-get install -y curl \
-    linux-image-extra-$(uname -r) \
-    linux-image-extra-virtual
-
-#Configurar el repositorio
-sudo apt-get install -y apt-transport-https \
-                       software-properties-common \
-                       ca-certificates
-
-# Agregar llave oficial GPG de docker
-curl -fsSL https://yum.dockerproject.org/gpg | sudo apt-key add -
-
-# Validar que llave sea 58118E89F3A912897C070ADBF76221572C52609D
-$(apt-key fingerprint 58118E89F3A912897C070ADBF76221572C526091 | wc -l | grep -qv 0) && echo Verificado || echo "Error de verificacion"
-
-# Instalar repositorio estable
-sudo apt-get install -y software-properties-common
-sudo add-apt-repository -y \
-       "deb https://apt.dockerproject.org/repo/ \
-       ubuntu-$(lsb_release -cs) \
-       main"
-
-# Instalar docker
-sudo apt-get update
-sudo apt-get -y install docker-engine
-
-# Usuarios y grupos
-sudo groupadd docker
-sudo usermod -aG docker $USER
-
-# Verificar la instalación
-sudo docker run hello-world
-```
-
-## Instalar Docker Compose
-> Como contenedor
-
-Basado en la [doc de Docker-compose][c1ae1065]
-``` bash
-curl -L https://github.com/docker/compose/releases/download/1.10.0/run.sh > /tmp/docker-compose
-chmod +x /tmp/docker-compose
-sudo mv /tmp/docker-compose /usr/local/bin/docker-compose
-```
-
-  [c1ae1065]: https://docs.docker.com/compose/install/ "Docker-compose"

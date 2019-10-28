@@ -1,8 +1,8 @@
-FROM php:7.0.31-fpm-stretch
+FROM php:7.1-fpm-stretch
 LABEL Description="Esta imagen sirve para la configuración de php-fpm para moodle" Version="1.0"
 
 ARG DOCUMENT_ROOT=/var/www/html
-ARG MY_TZ=America/Costa_Rica
+ARG MY_TZ=America/Sao_Paulo
 
 ENV WEB_DOCUMENT_ROOT=$DOCUMENT_ROOT
 ENV WEB_MY_TZ=${MY_TZ}
@@ -13,19 +13,21 @@ RUN apt-get update && \
     # https://docs.moodle.org/35/en/PHP \
     apt-get install -y --no-install-recommends libxml2-dev zlib1g-dev libpng-dev \
         libfreetype6-dev libjpeg62-turbo-dev libicu-dev libpspell-dev libpq-dev libldap2-dev libxslt-dev && \
-    docker-php-ext-configure gd --with-gd --with-freetype-dir=/usr/include/ \
+	docker-php-ext-configure gd --with-gd --with-freetype-dir=/usr/include/ \
         --with-jpeg-dir=/usr/include/ --with-png-dir=/usr/include/ && \
     docker-php-ext-install gd && \
     docker-php-ext-configure xmlrpc --with-libxml-dir=/usr/include/ && \
     docker-php-ext-install xmlrpc && \
     docker-php-ext-configure ldap --with-libdir=lib/x86_64-linux-gnu && \
-    docker-php-ext-install ldap && \
-    # Ya están instalados curl iconv mbstring openssl tokenizer ctype simplexml spl pcre dom xml json  \
-    docker-php-ext-install soap zip intl pspell pgsql xsl && \
+    docker-php-ext-install ldap && \ 
+	docker-php-ext-install soap zip intl pspell pgsql xsl && \
     docker-php-ext-configure opcache --enable-opcache && docker-php-ext-install opcache
 
 # Adicionales
-RUN apt-get install -y graphviz clamav clamav-daemon zip unzip aspell-es
+RUN apt-get install -y graphviz clamav clamav-daemon zip unzip aspell-es && \
+	apt-get install -y locales && \
+	sed -i 's/# en_AU.UTF-8 UTF-8/en_AU.UTF-8 UTF-8/' /etc/locale.gen && \
+	locale-gen
 
 # Config
 COPY php-fpm/conf/custom-php.ini /usr/local/etc/php/conf.d/php.ini

@@ -15,6 +15,8 @@ if ! [ -z ${POSTGRES_DB+x} ] && ! [ -z ${POSTGRES_USER+x} ] && ! [ -z ${POSTGRES
         -e  "s@^\$CFG->dbpass.*@\$CFG->dbpass    = '${POSTGRES_PASSWORD}';@" \
         -e  "s@^\$CFG->wwwroot.*@\$CFG->wwwroot    = 'http://${host_port}';@" \
         -e  "s@^\$CFG->dataroot.*@\$CFG->dataroot    = '${MOODLE_DATA}';@" \
+		-e  "s@.*\$CFG->phpunit_prefix.*@\$CFG->phpunit_prefix = 'phpu_';@" \
+		-e  "s@.*\$CFG->phpunit_dataroot.*@\$CFG->phpunit_dataroot = '/var/www/phpunitdata';@" \
         ${DOCUMENT_ROOT}/config.php
 fi
 # Remote xdebug host
